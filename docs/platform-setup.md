@@ -6,6 +6,12 @@ with native Windows used for Arduino flashing if preferred. macOS is best used
 for firmware and ROS 2 package development; Gazebo simulation should be run in a
 Linux VM or container.
 
+There are two hardware control modes:
+
+- USB serial: the ROS 2 host is physically connected to the UNO Q USB port.
+- Remote network: an Arduino App Lab app runs on the UNO Q and exposes a TCP
+  control port over Wi-Fi or Ethernet.
+
 ## Linux: Ubuntu 24.04
 
 Install ROS 2 Jazzy Desktop and developer tools using the official ROS 2 Jazzy
@@ -50,6 +56,17 @@ Run hardware:
 ```bash
 source ~/git/unoq-braccio/ros2_ws/install/setup.bash
 ros2 launch unoq_braccio_bringup hardware.launch.py serial_port:=/dev/ttyACM0
+```
+
+Run hardware remotely over the network:
+
+1. Install and start `app_lab/braccio_remote_agent` on the UNO Q with App Lab.
+2. Find the UNO Q IP address in App Lab or over SSH with `ip addr show`.
+3. Run:
+
+```bash
+source ~/git/unoq-braccio/ros2_ws/install/setup.bash
+ros2 launch unoq_braccio_bringup remote.launch.py host:=<UNO_Q_IP_ADDRESS> port:=8765
 ```
 
 Run simulation:
@@ -141,6 +158,23 @@ ros2 launch unoq_braccio_bringup hardware.launch.py serial_port:=/dev/ttyACM0
 
 If the board appears as `/dev/ttyUSB0`, pass that path instead.
 
+### Remote hardware bridge from WSL2
+
+This is usually easier than USB forwarding on Windows. Keep the UNO Q on the
+same network as the Windows/WSL2 machine, run `app_lab/braccio_remote_agent` on
+the UNO Q, then launch:
+
+```bash
+source ~/git/unoq-braccio/ros2_ws/install/setup.bash
+ros2 launch unoq_braccio_bringup remote.launch.py host:=<UNO_Q_IP_ADDRESS> port:=8765
+```
+
+Send a test pose:
+
+```bash
+ros2 run unoq_braccio_driver pose_demo --ros-args -p pose:=ready
+```
+
 ### Native Windows ROS 2
 
 Native Windows ROS 2 is useful for experimentation, but it is not the validated
@@ -180,6 +214,32 @@ Stop the test app:
 ```bash
 arduino-app-cli app stop ~/ArduinoApps/braccio_smoke_test
 ```
+
+### Running the Remote Agent from Arduino App Lab
+
+Use this path when you want the robot arm to be controlled over the network
+instead of a USB serial cable.
+
+1. Power the Braccio shield from its servo power input.
+2. Connect the UNO Q to the same Wi-Fi/Ethernet network as the ROS 2 host.
+3. Open Arduino App Lab and connect to the UNO Q.
+4. Create a new app named `braccio_remote_agent`.
+5. Add the `Braccio`, `Servo`, and `Arduino_RouterBridge` libraries.
+6. Replace the generated files with the files in
+   `app_lab/braccio_remote_agent`.
+7. Run the app.
+8. Find the UNO Q IP address.
+
+Then from the ROS 2 host:
+
+```bash
+source ros2_ws/install/setup.bash
+ros2 launch unoq_braccio_bringup remote.launch.py host:=<UNO_Q_IP_ADDRESS> port:=8765
+ros2 run unoq_braccio_driver pose_demo --ros-args -p pose:=ready
+```
+
+The remote agent listens on TCP port `8765` and accepts the same `M ...` command
+format as the USB serial firmware.
 
 ## macOS
 
@@ -228,3 +288,17 @@ M 90 90 90 90 90 25
 ```
 
 The board should respond with `OK`.
+
+Remote agent smoke test from the ROS 2 host:
+
+```bash
+python3 - <<'PY'
+import socket
+host = "<UNO_Q_IP_ADDRESS>"
+with socket.create_connection((host, 8765), timeout=2) as sock:
+    sock.sendall(b"M 90 90 90 90 90 25\n")
+    print(sock.recv(128).decode().strip())
+PY
+```
+
+The remote agent should respond with `OK`.

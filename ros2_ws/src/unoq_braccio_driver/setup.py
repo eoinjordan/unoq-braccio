@@ -14,11 +14,12 @@ setup(
     zip_safe=True,
     maintainer="Eoin Jordan",
     maintainer_email="eoin@example.com",
-    description="Serial driver and pose helpers for UNO Q Braccio.",
+    description="USB serial, TCP, and pose helpers for UNO Q Braccio.",
     license="MIT",
     entry_points={
         "console_scripts": [
             "serial_bridge = unoq_braccio_driver.serial_bridge:main",
+            "tcp_bridge = unoq_braccio_driver.tcp_bridge:main",
             "pose_demo = unoq_braccio_driver.pose_demo:main",
             "edge_impulse_mapper = unoq_braccio_driver.edge_impulse_mapper:main",
             "joint_state_simulator = unoq_braccio_driver.joint_state_simulator:main",

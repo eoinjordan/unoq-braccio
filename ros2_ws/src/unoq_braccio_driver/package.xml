@@ -2,7 +2,7 @@
 <package format="3">
   <name>unoq_braccio_driver</name>
   <version>0.1.0</version>
-  <description>ROS 2 serial driver and command helpers for UNO Q Braccio.</description>
+  <description>ROS 2 hardware drivers and command helpers for UNO Q Braccio.</description>
   <maintainer email="eoin@example.com">Eoin Jordan</maintainer>
   <license>MIT</license>
 

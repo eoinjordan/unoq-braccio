@@ -8,8 +8,8 @@ This repository contains:
 - Arduino firmware using the official
   [arduino-libraries/Braccio](https://github.com/arduino-libraries/Braccio)
   library.
-- A ROS 2 serial bridge that converts `sensor_msgs/JointState` commands into
-  Braccio servo angles.
+- ROS 2 USB serial and remote TCP bridges that convert
+  `sensor_msgs/JointState` commands into Braccio servo angles.
 - A ROS 2 teleop node for keyboard-free testing.
 - A Gazebo/ros2_control simulation package for developing without hardware.
 - Edge Impulse integration scaffolding for gesture or classifier-driven arm
@@ -18,8 +18,9 @@ This repository contains:
 ## Repository Layout
 
 ```text
-firmware/unoq_braccio_firmware/   Arduino sketch for UNO Q + Braccio shield
+firmware/unoq_braccio_firmware/   USB serial firmware for UNO Q + Braccio
 app_lab/braccio_smoke_test/       Arduino App Lab hardware smoke test
+app_lab/braccio_remote_agent/     Arduino App Lab network control agent
 ros2_ws/src/unoq_braccio_bringup/ ROS 2 launch files and runtime config
 ros2_ws/src/unoq_braccio_driver/  Serial driver and demo command nodes
 ros2_ws/src/unoq_braccio_sim/     URDF, Gazebo world, ros2_control config
@@ -32,7 +33,7 @@ docs/                             Hardware and workflow documentation
 
 - Arduino UNO Q
 - TinkerKit Braccio robot arm and Braccio shield
-- USB serial connection to the ROS 2 host
+- USB serial or Wi-Fi/Ethernet network connection to the ROS 2 host
 - 5 V power supply for the Braccio servos
 
 The firmware expects the Arduino Braccio library to be installed through the
@@ -72,7 +73,7 @@ arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:zephyr:unoq firmware/unoq_brac
 The Braccio shield sits on the UNO Q headers. Do not use `arduino:avr:uno`;
 UNO Q builds target the Zephyr-based MCU core with `arduino:zephyr:unoq`.
 
-### 3. Run the hardware bridge
+### 3. Run the hardware bridge over USB
 
 ```bash
 source ros2_ws/install/setup.bash
@@ -85,7 +86,23 @@ Publish a test pose:
 ros2 run unoq_braccio_driver pose_demo --ros-args -p pose:=ready
 ```
 
-### 4. Run Gazebo simulation
+### 4. Run the hardware bridge over the network
+
+Install and run the App Lab project in `app_lab/braccio_remote_agent` on the
+UNO Q, then launch the ROS 2 TCP bridge:
+
+```bash
+source ros2_ws/install/setup.bash
+ros2 launch unoq_braccio_bringup remote.launch.py host:=<UNO_Q_IP_ADDRESS> port:=8765
+```
+
+Send the same test pose:
+
+```bash
+ros2 run unoq_braccio_driver pose_demo --ros-args -p pose:=ready
+```
+
+### 5. Run Gazebo simulation
 
 ```bash
 source ros2_ws/install/setup.bash
@@ -100,7 +117,8 @@ ros2 run unoq_braccio_driver pose_demo --ros-args -p pose:=wave
 
 ## Command Protocol
 
-The ROS 2 bridge sends one serial line per command:
+The USB serial firmware and remote App Lab agent both use the same command
+protocol:
 
 ```text
 M <base> <shoulder> <elbow> <wrist_vertical> <wrist_rotation> <gripper>
@@ -120,15 +138,3 @@ Braccio operating ranges before moving servos.
 
 See [edge_impulse/README.md](edge_impulse/README.md) for the integration
 pattern.
-
-## GitHub Setup
-
-```bash
-git init
-git add .
-git commit -m "first commit"
-git branch -M main
-git remote add origin git@github.com:eoinjordan/unoq-braccio.git
-git push -u origin main
-```
-
