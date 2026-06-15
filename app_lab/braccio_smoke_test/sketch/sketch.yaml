@@ -1,0 +1,9 @@
+profiles:
+  default:
+    fqbn: arduino:zephyr:unoq
+    platforms:
+      - platform: arduino:zephyr
+    libraries:
+      - Braccio
+      - Servo
+default_profile: default

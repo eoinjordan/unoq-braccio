@@ -147,6 +147,40 @@ Native Windows ROS 2 is useful for experimentation, but it is not the validated
 path for this repo's Gazebo simulation. Use WSL2 if you want the commands in
 this repo to match the Linux launch files exactly.
 
+### Flashing a Test from Arduino App Lab
+
+Use this path when you want to validate the UNO Q + Braccio shield from App Lab
+before involving ROS 2.
+
+1. Power the Braccio shield from its servo power input.
+2. Connect the UNO Q to the PC over USB-C.
+3. Open Arduino App Lab and connect to the UNO Q.
+4. Let App Lab update the board if it prompts for firmware or runtime updates.
+5. Create a new app named `braccio_smoke_test`.
+6. Add the `Braccio` and `Servo` libraries in the App Lab library panel.
+7. Replace the generated files with the files in
+   `app_lab/braccio_smoke_test`.
+8. Click App Lab's run/start button.
+
+Expected result: the arm moves to rest, waits for about two seconds, moves to a
+small ready pose, then returns to rest.
+
+If you prefer the App Lab CLI route after the board is configured, copy the app
+folder to the UNO Q and start it over SSH:
+
+```powershell
+scp -r .\app_lab\braccio_smoke_test arduino@<UNO_Q_IP_ADDRESS>:~/ArduinoApps/
+ssh arduino@<UNO_Q_IP_ADDRESS>
+arduino-app-cli app start ~/ArduinoApps/braccio_smoke_test
+arduino-app-cli app logs ~/ArduinoApps/braccio_smoke_test
+```
+
+Stop the test app:
+
+```bash
+arduino-app-cli app stop ~/ArduinoApps/braccio_smoke_test
+```
+
 ## macOS
 
 ROS 2 Jazzy on macOS is a source-build workflow in the official ROS 2 docs. For

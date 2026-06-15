@@ -19,6 +19,7 @@ This repository contains:
 
 ```text
 firmware/unoq_braccio_firmware/   Arduino sketch for UNO Q + Braccio shield
+app_lab/braccio_smoke_test/       Arduino App Lab hardware smoke test
 ros2_ws/src/unoq_braccio_bringup/ ROS 2 launch files and runtime config
 ros2_ws/src/unoq_braccio_driver/  Serial driver and demo command nodes
 ros2_ws/src/unoq_braccio_sim/     URDF, Gazebo world, ros2_control config
@@ -55,6 +56,10 @@ cd ..
 ```
 
 ### 2. Flash the UNO Q
+
+For a first hardware check through Arduino App Lab, use
+[app_lab/braccio_smoke_test](app_lab/braccio_smoke_test). For direct
+`arduino-cli` flashing:
 
 ```bash
 arduino-cli lib install Braccio

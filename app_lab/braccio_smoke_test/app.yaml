@@ -1,0 +1,6 @@
+name: UNOQ Braccio Smoke Test
+description: "Validate Braccio shield servo control on Arduino UNO Q"
+icon:
+version: "0.1.0"
+ports: []
+bricks: []
