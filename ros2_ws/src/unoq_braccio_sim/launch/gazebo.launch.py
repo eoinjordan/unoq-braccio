@@ -60,7 +60,18 @@ def generate_launch_description():
             Node(
                 package="ros_gz_sim",
                 executable="create",
-                arguments=["-name", "unoq_braccio", "-topic", "robot_description"],
+                arguments=[
+                    "-name",
+                    "unoq_braccio",
+                    "-topic",
+                    "robot_description",
+                    "-x",
+                    "0",
+                    "-y",
+                    "0",
+                    "-z",
+                    "0.02",
+                ],
                 output="screen",
             ),
             TimerAction(

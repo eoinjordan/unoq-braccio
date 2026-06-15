@@ -22,3 +22,7 @@ if [ -f "$workspace/install/unoq_braccio_sim/share/unoq_braccio_sim/urdf/braccio
   grep -n "mesh_dir\\|braccio_stedden\\|file://" \
     "$workspace/install/unoq_braccio_sim/share/unoq_braccio_sim/urdf/braccio.urdf.xacro"
 fi
+
+echo
+echo "After launch, Gazebo should list the entity as unoq_braccio near world origin."
+echo "If it is missing, run: gz topic -l | grep -E 'world|pose|model'"

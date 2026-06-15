@@ -48,6 +48,7 @@
   <joint name="base_fixed" type="fixed">
     <parent link="world"/>
     <child link="base_link"/>
+    <origin xyz="0 0 0.02" rpy="0 0 0"/>
   </joint>
 
   <link name="braccio_base_link">
@@ -134,7 +135,7 @@
   <joint name="base" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort="2" lower="-1.5708" upper="1.5708" velocity="1"/>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="0 0 0.01" rpy="0 0 0"/>
     <parent link="base_link"/>
     <child link="braccio_base_link"/>
     <dynamics damping="0.1" friction="0.001"/>
