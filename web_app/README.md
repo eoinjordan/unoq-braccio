@@ -10,6 +10,10 @@ It talks directly to:
 Recommended: run `app_lab/braccio_web_agent`, which combines both services in
 one App Lab app.
 
+That path is an App Lab project folder, not a shell command. Start it from
+Arduino App Lab on the UNO Q, or copy it to the board and start it with
+`arduino-app-cli` over SSH if your board is configured for that.
+
 ROS 2 is not required for this web UI.
 
 ## Start
