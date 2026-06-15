@@ -22,6 +22,7 @@
           <span id="cameraUrl"></span>
         </div>
         <img id="camera" alt="UNO Q camera stream">
+        <p id="cameraStatus" class="hint"></p>
       </section>
 
       <section class="panel">
@@ -34,7 +35,10 @@
       <section class="panel">
         <div class="panel-head">
           <h2>Manual Control</h2>
-          <button id="sendBtn">Send</button>
+          <div class="manual-actions">
+            <label><input id="autoSend" type="checkbox" checked> Auto-send</label>
+            <button id="sendBtn">Send</button>
+          </div>
         </div>
         <div id="sliders" class="sliders"></div>
       </section>

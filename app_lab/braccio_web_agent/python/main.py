@@ -20,6 +20,7 @@ START_TIME = time.monotonic()
 
 frame_lock = threading.Lock()
 latest_jpeg = None
+camera_message = "camera starting"
 move_count = 0
 last_move_ms = 0
 last_command_ms = 0
@@ -94,16 +95,19 @@ def find_camera():
 
 
 def camera_loop():
-    global latest_jpeg
+    global latest_jpeg, camera_message
     if cv2 is None:
+        camera_message = f"OpenCV unavailable: {CV2_IMPORT_ERROR}"
         print(f"OpenCV unavailable; camera stream disabled: {CV2_IMPORT_ERROR}")
         return
 
     capture = find_camera()
     if capture is None:
+        camera_message = "No usable /dev/video* camera found"
         print("No usable camera found; camera stream will stay unavailable")
         return
 
+    camera_message = "camera online"
     capture.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
     capture.set(cv2.CAP_PROP_FPS, 15)
@@ -122,8 +126,15 @@ def camera_loop():
 
 class StreamHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        if self.path not in ("/", "/stream"):
+        if self.path not in ("/", "/stream", "/camera-status"):
             self.send_error(404)
+            return
+
+        if self.path == "/camera-status":
+            self.send_response(200)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(camera_message.encode("utf-8"))
             return
 
         if self.path == "/":
@@ -143,6 +154,15 @@ class StreamHandler(BaseHTTPRequestHandler):
             self.wfile.write(b"Camera disabled because OpenCV is unavailable.\n")
             return
 
+        with frame_lock:
+            first_frame = latest_jpeg
+        if first_frame is None:
+            self.send_response(503)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(f"Camera unavailable: {camera_message}\n".encode("utf-8"))
+            return
+
         self.send_response(200)
         self.send_header("Age", "0")
         self.send_header("Cache-Control", "no-cache, private")
@@ -154,8 +174,7 @@ class StreamHandler(BaseHTTPRequestHandler):
             with frame_lock:
                 frame = latest_jpeg
             if frame is None:
-                time.sleep(0.1)
-                continue
+                break
             try:
                 self.wfile.write(b"--frame\r\n")
                 self.wfile.write(b"Content-Type: image/jpeg\r\n\r\n")

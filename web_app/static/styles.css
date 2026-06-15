@@ -78,6 +78,26 @@ h2 {
   width: 100%;
 }
 
+.hint {
+  color: #697789;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+.manual-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.manual-actions label {
+  align-items: center;
+  color: #5d6b7d;
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+
 button {
   background: #1f6feb;
   border: 0;

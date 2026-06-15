@@ -6,10 +6,13 @@ const state = {
 const connection = document.getElementById("connection");
 const camera = document.getElementById("camera");
 const cameraUrl = document.getElementById("cameraUrl");
+const cameraStatus = document.getElementById("cameraStatus");
 const poses = document.getElementById("poses");
 const sliders = document.getElementById("sliders");
 const stats = document.getElementById("stats");
 const log = document.getElementById("log");
+const autoSend = document.getElementById("autoSend");
+let manualTimer = null;
 
 function writeLog(message) {
   const line = `${new Date().toLocaleTimeString()} ${message}`;
@@ -26,6 +29,27 @@ async function api(path, options = {}) {
     throw new Error(payload.error || payload.response || response.statusText);
   }
   return payload;
+}
+
+async function sendManualMove(source = "Move") {
+  try {
+    const result = await api("/api/move", {
+      method: "POST",
+      body: JSON.stringify({ values: state.values }),
+    });
+    writeLog(`${source}: ${result.response}`);
+    await refreshStatus();
+  } catch (error) {
+    writeLog(`${source} failed: ${error.message}`);
+  }
+}
+
+function scheduleManualMove() {
+  if (!autoSend.checked) {
+    return;
+  }
+  window.clearTimeout(manualTimer);
+  manualTimer = window.setTimeout(() => sendManualMove("Auto move"), 350);
 }
 
 function renderPoses() {
@@ -74,6 +98,7 @@ function renderSliders() {
     range.addEventListener("input", () => {
       state.values[index] = Number(range.value);
       value.textContent = range.value;
+      scheduleManualMove();
     });
 
     row.append(title, range, value);
@@ -119,6 +144,10 @@ async function init() {
   state.values = state.config.poses.ready.slice();
   camera.src = state.config.camera_url;
   cameraUrl.textContent = state.config.camera_url;
+  cameraStatus.textContent = "If the image is blank, open the camera URL directly to see the UNO Q camera status.";
+  camera.addEventListener("error", () => {
+    cameraStatus.textContent = "Camera stream not available. Check the UNO Q app log and /dev/video camera path.";
+  });
   renderPoses();
   renderSliders();
   await refreshStatus();
@@ -126,16 +155,7 @@ async function init() {
 }
 
 document.getElementById("sendBtn").addEventListener("click", async () => {
-  try {
-    const result = await api("/api/move", {
-      method: "POST",
-      body: JSON.stringify({ values: state.values }),
-    });
-    writeLog(`Move: ${result.response}`);
-    await refreshStatus();
-  } catch (error) {
-    writeLog(`Move failed: ${error.message}`);
-  }
+  await sendManualMove("Move");
 });
 
 document.getElementById("stopBtn").addEventListener("click", async () => {
