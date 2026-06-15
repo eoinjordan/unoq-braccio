@@ -19,7 +19,7 @@ Ubuntu instructions.
 
 ```bash
 sudo apt update
-sudo apt install -y python3-colcon-common-extensions python3-rosdep python3-pip
+sudo apt install -y python3-colcon-common-extensions python3-rosdep python3-pip python3-opencv ros-jazzy-cv-bridge v4l-utils
 sudo rosdep init || true
 rosdep update
 ```
@@ -96,7 +96,7 @@ instructions, then install workspace tools:
 
 ```bash
 sudo apt update
-sudo apt install -y python3-colcon-common-extensions python3-rosdep python3-pip
+sudo apt install -y python3-colcon-common-extensions python3-rosdep python3-pip python3-opencv ros-jazzy-cv-bridge v4l-utils
 sudo rosdep init || true
 rosdep update
 ```
@@ -411,7 +411,7 @@ If `rosdep` or `colcon` are missing on Ubuntu:
 
 ```bash
 sudo apt update
-sudo apt install -y python3-rosdep python3-colcon-common-extensions python3-pip
+sudo apt install -y python3-rosdep python3-colcon-common-extensions python3-pip python3-opencv ros-jazzy-cv-bridge v4l-utils
 sudo rosdep init || true
 rosdep update
 ```

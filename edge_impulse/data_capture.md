@@ -15,6 +15,7 @@ Captured data therefore includes:
 - Estimated commanded angular rate.
 - Current classifier or operator label.
 - Firmware or remote-agent status string.
+- Latest vision stats string when the USB camera tracker is running.
 - Move count, last move duration, uptime, and last target when available.
 
 For real motor current or torque data, add external sensors such as a current
@@ -69,6 +70,6 @@ The capture file contains:
 - `<joint>_delta_deg`
 - `<joint>_rate_dps`
 - `firmware_status`
+- `vision_stats`
 
 Use the CSV upload flow in Edge Impulse to import the capture file.
-

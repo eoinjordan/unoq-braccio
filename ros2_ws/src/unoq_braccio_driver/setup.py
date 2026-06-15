@@ -23,6 +23,8 @@ setup(
             "pose_demo = unoq_braccio_driver.pose_demo:main",
             "edge_impulse_mapper = unoq_braccio_driver.edge_impulse_mapper:main",
             "edge_impulse_capture = unoq_braccio_driver.edge_impulse_capture:main",
+            "usb_camera_node = unoq_braccio_driver.usb_camera_node:main",
+            "color_tracker = unoq_braccio_driver.color_tracker:main",
             "joint_state_simulator = unoq_braccio_driver.joint_state_simulator:main",
         ],
     },

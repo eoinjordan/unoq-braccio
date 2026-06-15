@@ -15,6 +15,8 @@ This repository contains:
 - Edge Impulse integration scaffolding for gesture or classifier-driven arm
   poses.
 - Edge Impulse CSV data capture for commanded servo motion and robot status.
+- USB camera vision with OpenCV color tracking, plus notes for Pixy and
+  ESP32-CAM expansion.
 
 ## Repository Layout
 
@@ -189,3 +191,15 @@ STAT uptime_ms=12345 move_count=3 last_move_ms=640 last_command_ms=12000 target=
 ```
 
 See [edge_impulse/data_capture.md](edge_impulse/data_capture.md).
+
+## Vision
+
+The easiest sight path is a USB camera on the ROS 2 host:
+
+```bash
+source ros2_ws/install/setup.bash
+ros2 launch unoq_braccio_bringup vision_usb.launch.py camera_index:=0 label:=object
+```
+
+This publishes camera frames, debug frames, object centroid stats, and simple
+labels that can feed the Edge Impulse mapper. See [docs/vision.md](docs/vision.md).

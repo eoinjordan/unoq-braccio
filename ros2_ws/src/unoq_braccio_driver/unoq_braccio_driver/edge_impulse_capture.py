@@ -21,6 +21,7 @@ class EdgeImpulseCapture(Node):
         self.last_positions: dict[str, float] | None = None
         self.last_time_ns: int | None = None
         self.last_status = ""
+        self.last_vision_stats = ""
 
         output_file = str(self.get_parameter("output_file").value)
         os.makedirs(os.path.dirname(output_file) or ".", exist_ok=True)
@@ -48,6 +49,12 @@ class EdgeImpulseCapture(Node):
             self.on_status,
             10,
         )
+        self.vision_sub = self.create_subscription(
+            String,
+            "/braccio/vision_stats",
+            self.on_vision_stats,
+            10,
+        )
         self.get_logger().info(f"Capturing Edge Impulse CSV rows to {output_file}")
 
     def fieldnames(self) -> list[str]:
@@ -55,7 +62,7 @@ class EdgeImpulseCapture(Node):
         fields += [f"{name}_deg" for name in JOINT_NAMES]
         fields += [f"{name}_delta_deg" for name in JOINT_NAMES]
         fields += [f"{name}_rate_dps" for name in JOINT_NAMES]
-        fields += ["firmware_status"]
+        fields += ["firmware_status", "vision_stats"]
         return fields
 
     def on_label(self, msg: String) -> None:
@@ -63,6 +70,9 @@ class EdgeImpulseCapture(Node):
 
     def on_status(self, msg: String) -> None:
         self.last_status = msg.data.strip()
+
+    def on_vision_stats(self, msg: String) -> None:
+        self.last_vision_stats = msg.data.strip()
 
     def on_command(self, msg: JointState) -> None:
         now_ns = self.get_clock().now().nanoseconds
@@ -79,6 +89,7 @@ class EdgeImpulseCapture(Node):
             "label": self.current_label,
             "dt_ms": f"{dt_ms:.3f}",
             "firmware_status": self.last_status,
+            "vision_stats": self.last_vision_stats,
         }
 
         for name, value in ordered.items():
