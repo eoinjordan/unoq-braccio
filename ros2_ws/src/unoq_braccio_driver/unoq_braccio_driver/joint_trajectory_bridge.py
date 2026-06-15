@@ -18,6 +18,7 @@ def servo_degrees_to_controller_position(name: str, value: float) -> float:
 class JointTrajectoryBridge(Node):
     def __init__(self) -> None:
         super().__init__("unoq_braccio_joint_trajectory_bridge")
+        self.last_command = None
         self.publisher = self.create_publisher(
             JointTrajectory,
             "/arm_controller/joint_trajectory",
@@ -29,6 +30,7 @@ class JointTrajectoryBridge(Node):
             self.on_command,
             10,
         )
+        self.timer = self.create_timer(0.5, self.republish_last_command)
 
     def on_command(self, msg: JointState) -> None:
         values_by_name = dict(zip(msg.name, msg.position))
@@ -46,7 +48,14 @@ class JointTrajectoryBridge(Node):
         ]
         point.time_from_start = Duration(sec=2)
         trajectory.points = [point]
+        self.last_command = trajectory
         self.publisher.publish(trajectory)
+
+    def republish_last_command(self) -> None:
+        if self.last_command is None:
+            return
+        self.last_command.header.stamp = self.get_clock().now().to_msg()
+        self.publisher.publish(self.last_command)
 
 
 def main() -> None:
