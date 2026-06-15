@@ -12,7 +12,7 @@ def servo_degrees_to_urdf_radians(name: str, value: float) -> float:
     if name == "shoulder":
         centered = float(value) - 90.0
     elif name == "gripper":
-        return max(0.0, min(1.0, (float(value) - 10.0) / 100.0)) * 0.035
+        return 0.1750 + max(0.0, min(1.0, (float(value) - 10.0) / 100.0)) * (1.2741 - 0.1750)
     return centered * 3.14159265359 / 180.0
 
 

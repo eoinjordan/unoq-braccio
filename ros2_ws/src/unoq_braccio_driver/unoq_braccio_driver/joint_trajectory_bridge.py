@@ -11,7 +11,7 @@ from unoq_braccio_driver.braccio_model import JOINT_NAMES, POSES
 
 def servo_degrees_to_controller_position(name: str, value: float) -> float:
     if name == "gripper":
-        return max(0.0, min(1.0, (float(value) - 10.0) / 100.0)) * 0.035
+        return 0.1750 + max(0.0, min(1.0, (float(value) - 10.0) / 100.0)) * (1.2741 - 0.1750)
     return math.radians(float(value) - 90.0)
 
 
