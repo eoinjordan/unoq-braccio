@@ -242,3 +242,7 @@ ros2 launch unoq_braccio_bringup edge_impulse_pick_place.launch.py \
   runner_command:="python3 edge_impulse/runner_template.py --image {image}" \
   workflow_file:=edge_impulse/pick_place_workflows.yaml
 ```
+
+For Linux Edge Impulse `.eim` setup and API-key authentication, see
+[edge_impulse/linux_setup.md](edge_impulse/linux_setup.md). Keep API keys in
+`EDGE_IMPULSE_API_KEY`, not in committed files.

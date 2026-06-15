@@ -52,3 +52,5 @@ ros2 launch unoq_braccio_bringup edge_impulse_pick_place.launch.py \
 Replace `runner_template.py` with your Edge Impulse model runner when ready.
 Edit `pick_place_workflows.yaml` so labels from your model match the item names
 and drop locations you want.
+
+For Linux `.eim` model testing, see [linux_setup.md](linux_setup.md).
