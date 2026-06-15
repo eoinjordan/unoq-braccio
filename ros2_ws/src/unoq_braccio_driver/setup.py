@@ -30,6 +30,7 @@ setup(
             "color_tracker = unoq_braccio_driver.color_tracker:main",
             "visual_servo_assist = unoq_braccio_driver.visual_servo_assist:main",
             "joint_state_simulator = unoq_braccio_driver.joint_state_simulator:main",
+            "joint_trajectory_bridge = unoq_braccio_driver.joint_trajectory_bridge:main",
         ],
     },
 )

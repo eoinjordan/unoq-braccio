@@ -1,15 +1,41 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="unoq_braccio">
   <xacro:property name="pi" value="3.14159265359"/>
+  <xacro:arg name="controllers_file" default=""/>
+
+  <material name="braccio_blue"><color rgba="0.05 0.18 0.8 1"/></material>
+  <material name="braccio_orange"><color rgba="0.94 0.6 0.05 1"/></material>
+  <material name="braccio_white"><color rgba="0.92 0.92 0.92 1"/></material>
+  <material name="braccio_dark"><color rgba="0.12 0.14 0.18 1"/></material>
+  <material name="camera_black"><color rgba="0.02 0.02 0.025 1"/></material>
+
+  <xacro:macro name="box_inertial" params="mass x y z">
+    <inertial>
+      <mass value="${mass}"/>
+      <inertia
+        ixx="${mass * (y * y + z * z) / 12.0}"
+        iyy="${mass * (x * x + z * z) / 12.0}"
+        izz="${mass * (x * x + y * y) / 12.0}"
+        ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </xacro:macro>
 
   <link name="world"/>
+
   <link name="base_link">
     <visual>
-      <geometry><cylinder radius="0.06" length="0.04"/></geometry>
-      <material name="braccio_blue"><color rgba="0.05 0.18 0.8 1"/></material>
+      <origin xyz="0 0 0.02"/>
+      <geometry><cylinder radius="0.07" length="0.04"/></geometry>
+      <material name="braccio_blue"/>
     </visual>
-    <collision><geometry><cylinder radius="0.06" length="0.04"/></geometry></collision>
-    <inertial><mass value="0.4"/><inertia ixx="0.001" iyy="0.001" izz="0.001" ixy="0" ixz="0" iyz="0"/></inertial>
+    <collision>
+      <origin xyz="0 0 0.02"/>
+      <geometry><cylinder radius="0.07" length="0.04"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.0012" iyy="0.0012" izz="0.0012" ixy="0" ixz="0" iyz="0"/>
+    </inertial>
   </link>
 
   <joint name="base_fixed" type="fixed">
@@ -17,34 +43,69 @@
     <child link="base_link"/>
   </joint>
 
-  <xacro:macro name="arm_link" params="name length radius color">
+  <xacro:macro name="arm_box" params="name length width height material">
     <link name="${name}">
       <visual>
-        <origin xyz="${length / 2} 0 0" rpy="0 ${pi / 2} 0"/>
-        <geometry><cylinder radius="${radius}" length="${length}"/></geometry>
-        <material name="${name}_mat"><color rgba="${color}"/></material>
+        <origin xyz="${length / 2.0} 0 0"/>
+        <geometry><box size="${length} ${width} ${height}"/></geometry>
+        <material name="${material}"/>
       </visual>
       <collision>
-        <origin xyz="${length / 2} 0 0" rpy="0 ${pi / 2} 0"/>
-        <geometry><cylinder radius="${radius}" length="${length}"/></geometry>
+        <origin xyz="${length / 2.0} 0 0"/>
+        <geometry><box size="${length} ${width} ${height}"/></geometry>
       </collision>
-      <inertial>
-        <origin xyz="${length / 2} 0 0"/>
-        <mass value="0.15"/>
-        <inertia ixx="0.0004" iyy="0.0004" izz="0.0004" ixy="0" ixz="0" iyz="0"/>
-      </inertial>
+      <xacro:box_inertial mass="0.16" x="${length}" y="${width}" z="${height}"/>
     </link>
   </xacro:macro>
 
-  <xacro:arm_link name="shoulder_link" length="0.12" radius="0.018" color="0.94 0.6 0.05 1"/>
-  <xacro:arm_link name="elbow_link" length="0.12" radius="0.016" color="0.08 0.45 0.85 1"/>
-  <xacro:arm_link name="wrist_link" length="0.08" radius="0.014" color="0.92 0.92 0.92 1"/>
-  <xacro:arm_link name="gripper_link" length="0.05" radius="0.01" color="0.15 0.15 0.15 1"/>
+  <xacro:arm_box name="shoulder_link" length="0.125" width="0.036" height="0.036" material="braccio_orange"/>
+  <xacro:arm_box name="elbow_link" length="0.125" width="0.032" height="0.032" material="braccio_blue"/>
+  <xacro:arm_box name="wrist_link" length="0.075" width="0.028" height="0.028" material="braccio_white"/>
+  <xacro:arm_box name="wrist_rotate_link" length="0.035" width="0.03" height="0.03" material="braccio_dark"/>
+  <xacro:arm_box name="gripper_carriage" length="0.04" width="0.04" height="0.024" material="braccio_dark"/>
+
+  <link name="left_finger">
+    <visual>
+      <origin xyz="0.035 0.018 0"/>
+      <geometry><box size="0.07 0.012 0.014"/></geometry>
+      <material name="braccio_white"/>
+    </visual>
+    <collision>
+      <origin xyz="0.035 0.018 0"/>
+      <geometry><box size="0.07 0.012 0.014"/></geometry>
+    </collision>
+    <xacro:box_inertial mass="0.03" x="0.07" y="0.012" z="0.014"/>
+  </link>
+
+  <link name="right_finger">
+    <visual>
+      <origin xyz="0.035 -0.018 0"/>
+      <geometry><box size="0.07 0.012 0.014"/></geometry>
+      <material name="braccio_white"/>
+    </visual>
+    <collision>
+      <origin xyz="0.035 -0.018 0"/>
+      <geometry><box size="0.07 0.012 0.014"/></geometry>
+    </collision>
+    <xacro:box_inertial mass="0.03" x="0.07" y="0.012" z="0.014"/>
+  </link>
+
+  <link name="camera_link">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry><box size="0.03 0.022 0.018"/></geometry>
+      <material name="camera_black"/>
+    </visual>
+    <collision>
+      <geometry><box size="0.03 0.022 0.018"/></geometry>
+    </collision>
+    <xacro:box_inertial mass="0.04" x="0.03" y="0.022" z="0.018"/>
+  </link>
 
   <joint name="base" type="revolute">
     <parent link="base_link"/>
     <child link="shoulder_link"/>
-    <origin xyz="0 0 0.04"/>
+    <origin xyz="0 0 0.055"/>
     <axis xyz="0 0 1"/>
     <limit lower="-1.5708" upper="1.5708" effort="2" velocity="1"/>
   </joint>
@@ -52,7 +113,7 @@
   <joint name="shoulder" type="revolute">
     <parent link="shoulder_link"/>
     <child link="elbow_link"/>
-    <origin xyz="0.12 0 0"/>
+    <origin xyz="0.125 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-1.309" upper="1.309" effort="2" velocity="1"/>
   </joint>
@@ -60,16 +121,86 @@
   <joint name="elbow" type="revolute">
     <parent link="elbow_link"/>
     <child link="wrist_link"/>
-    <origin xyz="0.12 0 0"/>
+    <origin xyz="0.125 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-1.5708" upper="1.5708" effort="2" velocity="1"/>
   </joint>
 
   <joint name="wrist_vertical" type="revolute">
     <parent link="wrist_link"/>
-    <child link="gripper_link"/>
-    <origin xyz="0.08 0 0"/>
+    <child link="wrist_rotate_link"/>
+    <origin xyz="0.075 0 0"/>
     <axis xyz="0 1 0"/>
     <limit lower="-1.5708" upper="1.5708" effort="1" velocity="1"/>
   </joint>
+
+  <joint name="wrist_rotation" type="revolute">
+    <parent link="wrist_rotate_link"/>
+    <child link="gripper_carriage"/>
+    <origin xyz="0.035 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-1.5708" upper="1.5708" effort="1" velocity="1"/>
+  </joint>
+
+  <joint name="gripper" type="prismatic">
+    <parent link="gripper_carriage"/>
+    <child link="left_finger"/>
+    <origin xyz="0.035 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0" upper="0.035" effort="1" velocity="0.05"/>
+  </joint>
+
+  <joint name="right_finger_fixed" type="fixed">
+    <parent link="gripper_carriage"/>
+    <child link="right_finger"/>
+    <origin xyz="0.035 0 0"/>
+  </joint>
+
+  <joint name="camera_mount" type="fixed">
+    <parent link="gripper_carriage"/>
+    <child link="camera_link"/>
+    <origin xyz="0.045 0 0.035" rpy="0 0 0"/>
+  </joint>
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="base">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="shoulder">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="elbow">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="wrist_vertical">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="wrist_rotation">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="gripper">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <parameters>$(arg controllers_file)</parameters>
+    </plugin>
+  </gazebo>
 </robot>

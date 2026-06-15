@@ -15,6 +15,8 @@ arm_controller:
       - shoulder
       - elbow
       - wrist_vertical
+      - wrist_rotation
+      - gripper
     command_interfaces:
       - position
     state_interfaces:

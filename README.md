@@ -158,6 +158,10 @@ Then send the same demo poses:
 ros2 run unoq_braccio_driver pose_demo --ros-args -p pose:=wave
 ```
 
+The Gazebo package models all six Braccio command joints, the gripper-mounted
+camera body, red/blue/yellow pick blocks, and colored drop zones. See
+[ros2_ws/src/unoq_braccio_sim/README.md](ros2_ws/src/unoq_braccio_sim/README.md).
+
 ## Command Protocol
 
 The USB serial firmware and remote App Lab agent both use the same command

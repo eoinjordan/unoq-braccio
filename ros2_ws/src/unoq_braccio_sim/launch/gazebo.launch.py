@@ -11,7 +11,12 @@ def generate_launch_description():
     share = get_package_share_directory("unoq_braccio_sim")
     xacro_path = os.path.join(share, "urdf", "braccio.urdf.xacro")
     world_path = os.path.join(share, "worlds", "empty.world")
-    robot_description = {"robot_description": Command(["xacro ", xacro_path])}
+    controllers_path = os.path.join(share, "config", "controllers.yaml")
+    robot_description = {
+        "robot_description": Command(
+            ["xacro ", xacro_path, " controllers_file:=", controllers_path]
+        )
+    }
 
     return LaunchDescription(
         [
@@ -32,9 +37,27 @@ def generate_launch_description():
                 output="screen",
             ),
             Node(
+                package="unoq_braccio_driver",
+                executable="joint_trajectory_bridge",
+                name="unoq_braccio_joint_trajectory_bridge",
+                output="screen",
+            ),
+            Node(
                 package="gazebo_ros",
                 executable="spawn_entity.py",
                 arguments=["-topic", "robot_description", "-entity", "unoq_braccio"],
+                output="screen",
+            ),
+            Node(
+                package="controller_manager",
+                executable="spawner",
+                arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
+                output="screen",
+            ),
+            Node(
+                package="controller_manager",
+                executable="spawner",
+                arguments=["arm_controller", "--controller-manager", "/controller_manager"],
                 output="screen",
             ),
         ]
