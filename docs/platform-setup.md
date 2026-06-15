@@ -187,14 +187,24 @@ If the UNO Q is listed as `offline`:
 Retry upload only when the UNO Q status changes from `offline` to `device`.
 
 If Arduino CLI also lists a network port, for example `192.168.1.64`, you can
-try network upload instead of USB ADB upload:
+use network upload instead of USB ADB upload. This is the validated Windows
+upload path for this project:
 
 ```powershell
-arduino-cli upload -p 192.168.1.64 --fqbn arduino:zephyr:unoq .\firmware\unoq_braccio_firmware
+arduino-cli board list
+arduino-cli upload -p 192.168.1.64 --fqbn arduino:zephyr:unoq .\firmware\unoq_braccio_firmware --upload-field password=arduino123
 ```
 
-If the command asks for upload credentials, rerun it with the App Lab or UNO Q
-upload password:
+Expected successful upload output includes OpenOCD messages and ends with:
+
+```text
+shutdown command invoked
+New upload port: 192.168.1.64 (network)
+```
+
+Replace `192.168.1.64` and `arduino123` with your UNO Q network address and
+upload password. If the command asks for upload credentials, rerun it with the
+App Lab or UNO Q upload password:
 
 ```powershell
 arduino-cli upload -p 192.168.1.64 --fqbn arduino:zephyr:unoq .\firmware\unoq_braccio_firmware --upload-field password=<UPLOAD_PASSWORD>
@@ -390,6 +400,16 @@ source: can't open install/setup.bash
 you are not in a ROS 2 Ubuntu environment. Do not build the ROS 2 workspace from
 the UNO Q App Lab shell, a minimal container shell, or any shell where `apt` is
 missing.
+
+This shell prompt is not a valid ROS 2 build environment for the setup steps:
+
+```text
+home:/mnt/host/c/Users/Eoin/git/unoq-braccio#
+```
+
+In that shell, commands such as `sudo apt update`, `rosdep update`, and
+`colcon build` are expected to fail if `sudo`, `apt`, `rosdep`, or `colcon` are
+not installed.
 
 Use Ubuntu 24.04 directly, or on Windows open the Ubuntu 24.04 WSL terminal.
 Then install ROS 2 Jazzy and the build tools before running `colcon`.

@@ -76,6 +76,16 @@ arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:zephyr:unoq firmware/unoq_brac
 The Braccio shield sits on the UNO Q headers. Do not use `arduino:avr:uno`;
 UNO Q builds target the Zephyr-based MCU core with `arduino:zephyr:unoq`.
 
+Validated Windows network upload path:
+
+```powershell
+arduino-cli board list
+arduino-cli upload -p 192.168.1.64 --fqbn arduino:zephyr:unoq .\firmware\unoq_braccio_firmware --upload-field password=arduino123
+```
+
+Replace `192.168.1.64` and `arduino123` with your UNO Q network address and
+upload password. This path avoids the Windows USB ADB `device offline` issue.
+
 ### 3. Run the hardware bridge over USB
 
 ```bash
