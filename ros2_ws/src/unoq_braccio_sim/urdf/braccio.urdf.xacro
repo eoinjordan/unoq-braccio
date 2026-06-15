@@ -41,7 +41,7 @@
     </collision>
     <inertial>
       <mass value="2"/>
-      <inertia ixx="0.015" ixy="0" ixz="0" iyy="0.00666666666667" iyz="0" izz="0.0216666666667"/>
+      <inertia ixx="0.004" ixy="0" ixz="0" iyy="0.004" iyz="0" izz="0.004"/>
     </inertial>
   </link>
 
@@ -59,7 +59,7 @@
     </collision>
     <inertial>
       <mass value="2"/>
-      <inertia ixx="0.015" ixy="0" ixz="0" iyy="0.00666666666667" iyz="0" izz="0.0216666666667"/>
+      <inertia ixx="0.004" ixy="0" ixz="0" iyy="0.004" iyz="0" izz="0.004"/>
     </inertial>
   </link>
 
