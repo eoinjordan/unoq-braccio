@@ -35,13 +35,14 @@ source install/setup.bash
 cd ..
 ```
 
-Flash the Arduino-compatible UNO Q:
+Flash the UNO Q:
 
 ```bash
 arduino-cli lib install Braccio
+arduino-cli core install arduino:zephyr
 arduino-cli board list
-arduino-cli compile --fqbn arduino:avr:uno firmware/unoq_braccio_firmware
-arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno firmware/unoq_braccio_firmware
+arduino-cli compile --fqbn arduino:zephyr:unoq firmware/unoq_braccio_firmware
+arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:zephyr:unoq firmware/unoq_braccio_firmware
 ```
 
 Run hardware:
@@ -109,12 +110,14 @@ Install Arduino CLI for Windows, then use PowerShell from the repo root:
 
 ```powershell
 arduino-cli lib install Braccio
+arduino-cli core install arduino:zephyr
 arduino-cli board list
-arduino-cli compile --fqbn arduino:avr:uno .\firmware\unoq_braccio_firmware
-arduino-cli upload -p COM3 --fqbn arduino:avr:uno .\firmware\unoq_braccio_firmware
+arduino-cli compile --fqbn arduino:zephyr:unoq .\firmware\unoq_braccio_firmware
+arduino-cli upload -p COM3 --fqbn arduino:zephyr:unoq .\firmware\unoq_braccio_firmware
 ```
 
 Replace `COM3` with the port shown by `arduino-cli board list`.
+Do not use `arduino:avr:uno`; the UNO Q MCU uses the Zephyr board package.
 
 ### Hardware bridge from WSL2
 
@@ -155,9 +158,10 @@ Install Arduino CLI:
 ```bash
 brew install arduino-cli
 arduino-cli lib install Braccio
+arduino-cli core install arduino:zephyr
 arduino-cli board list
-arduino-cli compile --fqbn arduino:avr:uno firmware/unoq_braccio_firmware
-arduino-cli upload -p /dev/cu.usbmodem1101 --fqbn arduino:avr:uno firmware/unoq_braccio_firmware
+arduino-cli compile --fqbn arduino:zephyr:unoq firmware/unoq_braccio_firmware
+arduino-cli upload -p /dev/cu.usbmodem1101 --fqbn arduino:zephyr:unoq firmware/unoq_braccio_firmware
 ```
 
 Replace `/dev/cu.usbmodem1101` with the port shown by `arduino-cli board list`.

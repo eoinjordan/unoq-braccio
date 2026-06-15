@@ -29,7 +29,7 @@ docs/                             Hardware and workflow documentation
 
 ## Hardware
 
-- Arduino UNO Q or compatible Arduino board
+- Arduino UNO Q
 - TinkerKit Braccio robot arm and Braccio shield
 - USB serial connection to the ROS 2 host
 - 5 V power supply for the Braccio servos
@@ -58,12 +58,14 @@ cd ..
 
 ```bash
 arduino-cli lib install Braccio
+arduino-cli core install arduino:zephyr
 arduino-cli board list
-arduino-cli compile --fqbn arduino:avr:uno firmware/unoq_braccio_firmware
-arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno firmware/unoq_braccio_firmware
+arduino-cli compile --fqbn arduino:zephyr:unoq firmware/unoq_braccio_firmware
+arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:zephyr:unoq firmware/unoq_braccio_firmware
 ```
 
-Adjust the FQBN if your UNO Q core exposes a different board identifier.
+The Braccio shield sits on the UNO Q headers. Do not use `arduino:avr:uno`;
+UNO Q builds target the Zephyr-based MCU core with `arduino:zephyr:unoq`.
 
 ### 3. Run the hardware bridge
 
