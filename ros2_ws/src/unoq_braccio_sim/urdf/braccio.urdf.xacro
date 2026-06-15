@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="unoq_braccio">
-  <xacro:property name="pi" value="3.14159265359"/>
   <xacro:arg name="controllers_file" default=""/>
 
   <material name="braccio_blue"><color rgba="0.05 0.18 0.8 1"/></material>
