@@ -246,3 +246,12 @@ ros2 launch unoq_braccio_bringup edge_impulse_pick_place.launch.py \
 For Linux Edge Impulse `.eim` setup and API-key authentication, see
 [edge_impulse/linux_setup.md](edge_impulse/linux_setup.md). Keep API keys in
 `EDGE_IMPULSE_API_KEY`, not in committed files.
+
+Public Edge Impulse project:
+
+```text
+https://studio.edgeimpulse.com/studio/1029890
+```
+
+Project labels used for pick/place examples: `Red Block`, `Blue Block`, and
+`Yellow Block`.

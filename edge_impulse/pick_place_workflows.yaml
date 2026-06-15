@@ -1,4 +1,64 @@
 items:
+  Red Block:
+    sequence:
+      - name: ready
+        pose: [90, 90, 90, 90, 90, 25]
+        wait: 1.0
+      - name: approach
+        pose: [90, 70, 70, 85, 90, 25]
+        wait: 1.2
+      - name: grip
+        pose: [90, 70, 70, 85, 90, 73]
+        wait: 0.8
+      - name: drop_left
+        pose: [45, 85, 80, 95, 90, 73]
+        wait: 1.2
+      - name: release
+        pose: [45, 85, 80, 95, 90, 10]
+        wait: 0.8
+      - name: rest
+        pose: [90, 45, 180, 180, 90, 10]
+        wait: 1.0
+  Blue Block:
+    sequence:
+      - name: ready
+        pose: [90, 90, 90, 90, 90, 25]
+        wait: 1.0
+      - name: approach
+        pose: [90, 70, 70, 85, 90, 25]
+        wait: 1.2
+      - name: grip
+        pose: [90, 70, 70, 85, 90, 73]
+        wait: 0.8
+      - name: drop_right
+        pose: [135, 85, 80, 95, 90, 73]
+        wait: 1.2
+      - name: release
+        pose: [135, 85, 80, 95, 90, 10]
+        wait: 0.8
+      - name: rest
+        pose: [90, 45, 180, 180, 90, 10]
+        wait: 1.0
+  Yellow Block:
+    sequence:
+      - name: ready
+        pose: [90, 90, 90, 90, 90, 25]
+        wait: 1.0
+      - name: approach
+        pose: [90, 70, 70, 85, 90, 25]
+        wait: 1.2
+      - name: grip
+        pose: [90, 70, 70, 85, 90, 73]
+        wait: 0.8
+      - name: drop_center
+        pose: [90, 85, 80, 95, 90, 73]
+        wait: 1.2
+      - name: release
+        pose: [90, 85, 80, 95, 90, 10]
+        wait: 0.8
+      - name: rest
+        pose: [90, 45, 180, 180, 90, 10]
+        wait: 1.0
   red_block:
     sequence:
       - name: ready

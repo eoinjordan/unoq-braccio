@@ -6,6 +6,25 @@ Use this path to test the project on Linux with your Edge Impulse project:
 Block Color Detection - braccio unoq
 ```
 
+Public project:
+
+```text
+https://studio.edgeimpulse.com/studio/1029890
+```
+
+Public live URL:
+
+```text
+https://studio.edgeimpulse.com/public/1029890/live
+```
+
+Project details verified from the public page:
+
+- Project ID: `1029890`
+- Project name: `Block Color Detection - braccio unoq`
+- Impulse type: object detection
+- Labels: `Blue Block`, `Red Block`, `Yellow Block`
+
 Do not commit API keys. Export the key in your shell:
 
 ```bash

@@ -2,6 +2,20 @@
 
 Use Edge Impulse to turn classifier labels into Braccio poses.
 
+Public project:
+
+```text
+https://studio.edgeimpulse.com/studio/1029890
+```
+
+Project: `Block Color Detection - braccio unoq`
+
+Labels currently used by the public object detection project:
+
+- `Blue Block`
+- `Red Block`
+- `Yellow Block`
+
 Recommended flow:
 
 1. Build and train an Edge Impulse project.
