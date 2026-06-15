@@ -2,9 +2,12 @@ import os
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess
+from launch.actions import IncludeLaunchDescription, TimerAction
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
+from launch_ros.substitutions import FindPackageShare
 from launch.substitutions import Command
+from launch.substitutions import PathJoinSubstitution
 
 
 def generate_launch_description():
@@ -20,9 +23,13 @@ def generate_launch_description():
 
     return LaunchDescription(
         [
-            ExecuteProcess(
-                cmd=["gazebo", "--verbose", world_path, "-s", "libgazebo_ros_factory.so"],
-                output="screen",
+            IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(
+                    PathJoinSubstitution(
+                        [FindPackageShare("ros_gz_sim"), "launch", "gz_sim.launch.py"]
+                    )
+                ),
+                launch_arguments={"gz_args": f"-r {world_path}"}.items(),
             ),
             Node(
                 package="robot_state_publisher",
@@ -43,22 +50,31 @@ def generate_launch_description():
                 output="screen",
             ),
             Node(
-                package="gazebo_ros",
-                executable="spawn_entity.py",
-                arguments=["-topic", "robot_description", "-entity", "unoq_braccio"],
+                package="ros_gz_sim",
+                executable="create",
+                arguments=["-name", "unoq_braccio", "-topic", "robot_description"],
                 output="screen",
             ),
-            Node(
-                package="controller_manager",
-                executable="spawner",
-                arguments=["joint_state_broadcaster", "--controller-manager", "/controller_manager"],
-                output="screen",
-            ),
-            Node(
-                package="controller_manager",
-                executable="spawner",
-                arguments=["arm_controller", "--controller-manager", "/controller_manager"],
-                output="screen",
+            TimerAction(
+                period=4.0,
+                actions=[
+                    Node(
+                        package="controller_manager",
+                        executable="spawner",
+                        arguments=[
+                            "joint_state_broadcaster",
+                            "--controller-manager",
+                            "/controller_manager",
+                        ],
+                        output="screen",
+                    ),
+                    Node(
+                        package="controller_manager",
+                        executable="spawner",
+                        arguments=["arm_controller", "--controller-manager", "/controller_manager"],
+                        output="screen",
+                    ),
+                ],
             ),
         ]
     )

@@ -24,8 +24,8 @@ On Ubuntu with ROS 2 Jazzy:
 ```bash
 sudo apt update
 sudo apt install \
-  ros-jazzy-gazebo-ros-pkgs \
-  ros-jazzy-gazebo-ros2-control \
+  ros-jazzy-ros-gz \
+  ros-jazzy-gz-ros2-control \
   ros-jazzy-ros2-control \
   ros-jazzy-ros2-controllers \
   ros-jazzy-xacro
