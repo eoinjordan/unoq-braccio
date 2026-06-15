@@ -50,7 +50,9 @@ Or create a clean import ZIP:
 .\scripts\package_app_lab.ps1 braccio_web_agent
 ```
 
-Then import the ZIP from `dist/`.
+Then import the ZIP from `dist/`. Do not import `app_lab/braccio_web_agent.zip`
+if one exists from an old manual zip operation; that archive may contain
+`__pycache__` and fail App Lab validation.
 
 Then test from PowerShell:
 

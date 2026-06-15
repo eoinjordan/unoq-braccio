@@ -8,13 +8,14 @@ $AppDir = Join-Path $RepoRoot "app_lab\$AppName"
 $DistDir = Join-Path $RepoRoot "dist"
 $Date = Get-Date -Format yyyyMMdd
 $ZipPath = Join-Path $DistDir "$AppName-app_lab-$Date.zip"
-$TempDir = Join-Path $env:TEMP "unoq-braccio-$AppName"
+$TempParent = Join-Path $env:TEMP "unoq-braccio-applab-package"
+$TempDir = Join-Path $TempParent $AppName
 
 if (!(Test-Path $AppDir)) {
     throw "App Lab app not found: $AppDir"
 }
 
-Remove-Item -LiteralPath $TempDir -Recurse -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath $TempParent -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $TempDir | Out-Null
 New-Item -ItemType Directory -Force -Path $DistDir | Out-Null
 
@@ -23,7 +24,7 @@ if ($LASTEXITCODE -ge 8) {
     throw "robocopy failed with exit code $LASTEXITCODE"
 }
 
-Compress-Archive -Path (Join-Path $TempDir "*") -DestinationPath $ZipPath -Force
-Remove-Item -LiteralPath $TempDir -Recurse -Force
+Compress-Archive -Path $TempDir -DestinationPath $ZipPath -Force
+Remove-Item -LiteralPath $TempParent -Recurse -Force
 
 Write-Output $ZipPath
