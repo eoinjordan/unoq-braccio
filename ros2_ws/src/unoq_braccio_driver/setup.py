@@ -23,6 +23,7 @@ setup(
             "pose_demo = unoq_braccio_driver.pose_demo:main",
             "edge_impulse_mapper = unoq_braccio_driver.edge_impulse_mapper:main",
             "edge_impulse_vision = unoq_braccio_driver.edge_impulse_vision:main",
+            "detection_label_bridge = unoq_braccio_driver.detection_label_bridge:main",
             "edge_impulse_capture = unoq_braccio_driver.edge_impulse_capture:main",
             "pick_place_executor = unoq_braccio_driver.pick_place_executor:main",
             "usb_camera_node = unoq_braccio_driver.usb_camera_node:main",

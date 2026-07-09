@@ -68,3 +68,27 @@ Edit `pick_place_workflows.yaml` so labels from your model match the item names
 and drop locations you want.
 
 For Linux `.eim` model testing, see [linux_setup.md](linux_setup.md).
+
+## Alternative backend: `edgeimpulse_ros`
+
+If you prefer the maintained [`edgeimpulse_ros`](https://github.com/edgeimpulse/edgeimpulse-ros)
+package instead of the runner-command node, use
+`edge_impulse_ros_pick_place.launch.py`. It runs the `edgeimpulse_ros` detector
+on `/braccio/camera/image_raw` and a `detection_label_bridge` node that maps the
+detector's `vision_msgs/Detection2DArray` output to the `/edge_impulse/label`
+string the executor already consumes, so the pick/place workflow is unchanged.
+
+Clone `edgeimpulse_ros` into the same workspace and build it, then:
+
+```bash
+source ros2_ws/install/setup.bash
+ros2 launch unoq_braccio_bringup remote.launch.py host:=192.168.1.64 port:=8765
+ros2 launch unoq_braccio_bringup edge_impulse_ros_pick_place.launch.py \
+  stream_url:=http://192.168.1.64:8080/stream \
+  model_path:=/absolute/path/to/model.eim \
+  workflow_file:=edge_impulse/pick_place_workflows.yaml
+```
+
+The bridge picks the highest-scoring detection and publishes its class label
+when the score clears `min_confidence` (default `0.65`). It reads detections
+from `detections_topic` (default `/edgeimpulse_detector/detections`).
